@@ -6,7 +6,13 @@ import { useDropzone } from "react-dropzone";
 export default function UploadPage() {
   const [text, setText] = useState("");
   const [summary, setSummary] = useState("");
+  const [quiz, setQuiz] = useState("");
+  const [flashcards, setFlashcards] = useState("");
+  
   const [loading, setLoading] = useState(false);
+const [quizLoading, setQuizLoading] = useState(false);
+const [flashcardsLoading, setFlashcardsLoading] =
+  useState(false);
 
   // Upload PDF and extract text
   const onDrop = async (acceptedFiles: File[]) => {
@@ -77,8 +83,63 @@ export default function UploadPage() {
       setLoading(false);
     }
   };
+// Generate AI Quiz
+  const generateQuiz = async () => {
+  try {
+    setQuizLoading(true);
 
-  const { getRootProps, getInputProps, isDragActive } =
+    const response = await fetch("/api/quiz", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text,
+      }),
+    });
+
+    const data = await response.json();
+
+    setQuiz(data.quiz);
+
+    setQuizLoading(false);
+  } catch (error) {
+    console.error(error);
+    setQuizLoading(false);
+  }
+};
+
+//generate quiz
+const generateFlashcards = async () => {
+  try {
+    setFlashcardsLoading(true);
+
+    const response = await fetch(
+      "/api/flashcards",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+        body: JSON.stringify({
+          text,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    setFlashcards(data.flashcards);
+
+    setFlashcardsLoading(false);
+  } catch (error) {
+    console.error(error);
+    setFlashcardsLoading(false);
+  }
+};
+
+const { getRootProps, getInputProps, isDragActive } =
     useDropzone({
       onDrop,
       accept: {
@@ -129,7 +190,22 @@ export default function UploadPage() {
               ? "Generating..."
               : "Generate Summary"}
           </button>
-
+              <button
+  onClick={generateQuiz}
+  className="bg-blue-600 text-white px-4 py-2 rounded mt-4 ml-4"
+>
+  {quizLoading
+    ? "Generating Quiz..."
+    : "Generate Quiz"}
+</button>
+<button
+  onClick={generateFlashcards}
+  className="bg-green-600 text-white px-4 py-2 rounded mt-4 ml-4"
+>
+  {flashcardsLoading
+    ? "Generating..."
+    : "Generate Flashcards"}
+</button>
           {summary && (
             <div className="mt-8">
               <h2 className="text-2xl font-bold mb-4">
@@ -141,6 +217,28 @@ export default function UploadPage() {
               </pre>
             </div>
           )}
+          {quiz && (
+  <div className="mt-8">
+    <h2 className="text-2xl font-bold mb-4">
+      AI Quiz
+    </h2>
+
+    <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap">
+      {quiz}
+    </pre>
+  </div>
+)}
+{flashcards && (
+  <div className="mt-8">
+    <h2 className="text-2xl font-bold mb-4">
+      AI Flashcards
+    </h2>
+
+    <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap">
+      {flashcards}
+    </pre>
+  </div>
+)}
         </div>
       )}
     </div>
