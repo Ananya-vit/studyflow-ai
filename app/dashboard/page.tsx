@@ -1,19 +1,4 @@
-// Fallback local Sidebar component to avoid missing import during development.
-function Sidebar() {
-  return (
-    <aside className="w-64 bg-gray-50 border-r border-gray-200 p-6">
-      <h2 className="text-lg font-semibold">Studyflow</h2>
-      <nav className="mt-4">
-        <ul className="space-y-2 text-sm">
-          <li className="text-gray-600">Dashboard</li>
-          <li className="text-gray-600">Notes</li>
-          <li className="text-gray-600">Quizzes</li>
-          <li className="text-gray-600">Profile</li>
-        </ul>
-      </nav>
-    </aside>
-  );
-}
+import Sidebar from "@/components/AppSidebar";
 
 export default function Dashboard() {
   return (
