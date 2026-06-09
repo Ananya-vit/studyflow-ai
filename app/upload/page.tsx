@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { UploadCloud, Sparkles, FileText, Loader2, BookOpen, Layers, HelpCircle, ArrowRight } from "lucide-react";
+import AmbientWaves from "@/components/AmbientWaves";
 
 interface GenerationResults {
   summary?: string;
@@ -50,7 +51,6 @@ export default function UploadPage() {
       const rawExtractData = await extractResponse.json();
       console.log("1. Raw Data from PDF Extract Endpoint:", rawExtractData);
 
-      // Extract text content safely from the file extractor
       const text = rawExtractData.text || 
                    rawExtractData.extractedText || 
                    rawExtractData.content || 
@@ -68,6 +68,7 @@ export default function UploadPage() {
       setCurrentStep("Awakening AI Generation Engines...");
       
       const [summaryRes, quizRes, flashcardRes] = await Promise.all([
+        
         fetch("/api/summarize", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -86,17 +87,16 @@ export default function UploadPage() {
           body: JSON.stringify({ text }),
         }).then(res => res.json())
       ]);
+      console.log("========== QUIZ RAW ==========");
+console.log(JSON.stringify(quizRes, null, 2));
 
-      // =========================================================
-      // 🛠️ UNIVERSAL FAIL-SAFE DATA UNWRAPPER FOR GROQ PAYLOADS
-      // =========================================================
-      
-      // 1. Unpack Summary Content safely
+console.log("========== FLASHCARD RAW ==========");
+console.log(JSON.stringify(flashcardRes, null, 2));
+
       const finalSummary = summaryRes.summary || 
                            summaryRes.text || 
                            (typeof summaryRes === 'string' ? summaryRes : "Summary unavailable");
       
-      // 2. Unpack Quiz Data safely (searches deeper nested objects for any hidden array)
       let finalQuiz: any[] = [];
       if (quizRes) {
         if (Array.isArray(quizRes)) {
@@ -110,13 +110,11 @@ export default function UploadPage() {
         } else if (quizRes.data?.quiz && Array.isArray(quizRes.data.quiz)) {
           finalQuiz = quizRes.data.quiz;
         } else {
-          // Deep sweep: Look for the first property entry that contains an array
           const foundArray = Object.values(quizRes).find(val => Array.isArray(val));
           if (foundArray) finalQuiz = foundArray as any[];
         }
       }
 
-      // 3. Unpack Flashcard Data safely
       let finalFlashcards: any[] = [];
       if (flashcardRes) {
         if (Array.isArray(flashcardRes)) {
@@ -130,18 +128,15 @@ export default function UploadPage() {
         } else if (flashcardRes.data?.flashcards && Array.isArray(flashcardRes.data.flashcards)) {
           finalFlashcards = flashcardRes.data.flashcards;
         } else {
-          // Deep sweep: Look for the first property entry that contains an array
           const foundArray = Object.values(flashcardRes).find(val => Array.isArray(val));
           if (foundArray) finalFlashcards = foundArray as any[];
         }
       }
 
-      // 📊 DEBUG LOGS FOR VERIFICATION
       console.log("=== RE-PARSING METRICS ===");
       console.log("Extracted Quiz Array:", finalQuiz);
       console.log("Extracted Flashcard Array:", finalFlashcards);
 
-      // Save arrays safely into session storage
       sessionStorage.setItem("studyflow_summary", JSON.stringify(finalSummary));
       sessionStorage.setItem("studyflow_quiz", JSON.stringify(finalQuiz));
       sessionStorage.setItem("studyflow_flashcards", JSON.stringify(finalFlashcards));
@@ -165,11 +160,10 @@ export default function UploadPage() {
 
   return (
     <div className="relative min-h-screen w-full bg-black text-white font-sans flex flex-col justify-center items-center p-6 md:p-12 overflow-hidden">
+      
       {/* Background Flow Ambient Accents */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <path d="M-100,600 C300,400 450,750 900,550 C1300,350 1400,680 1900,480" fill="none" stroke="#4f46e5" strokeWidth="2" />
-        </svg>
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
+        <AmbientWaves />
       </div>
 
       <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col gap-8">

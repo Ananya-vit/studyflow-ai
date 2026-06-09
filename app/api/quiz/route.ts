@@ -7,38 +7,44 @@ apiKey: process.env.GROQ_API_KEY || "",
 
 export async function POST(request: Request) {
 try {
-const body = await request.json();
-const incomingText = body.text || "";
+const { text } = await request.json();
 
 
-if (!incomingText) {
+if (!text) {
   return NextResponse.json({
     quiz: [],
   });
 }
 
-const cleanContext = String(incomingText)
-  .substring(0, 4000)
-  .replace(/[\/\\]/g, "");
+const cleanContext = String(text)
+  .replace(/[\/\\]/g, "")
+  .substring(0, 2500);
 
-const chatCompletion =
+const completion =
   await groq.chat.completions.create({
-    model: "llama3-8b-8192",
-    temperature: 0.1,
+    model: "llama-3.3-70b-versatile",
+    temperature: 0,
     messages: [
       {
         role: "system",
         content: `
 
 
+You are a JSON API.
+
 Return ONLY valid JSON.
 
-Format:
+Never explain.
+Never summarize.
+Never repeat the source text.
+Never use markdown.
+
+Output format:
 
 {
 "quiz": [
 {
-"question": "Question text",
+"question": "Question",
 "options": [
 "Option A",
 "Option B",
@@ -49,74 +55,63 @@ Format:
 }
 ]
 }
-
-Do not include markdown.
-Do not include explanations.
-Do not include any text outside JSON.
 `,
-},
-{
-role: "user",
-content:
-"Generate quiz questions from this text:\n\n" +
-cleanContext,
+          },
+          {
+            role: "user",
+            content: `
+Generate exactly 10 multiple choice questions.
+
+Requirements:
+
+* 4 options each
+* 1 correct answer
+* Questions must be based on the provided text
+* Return JSON only
+
+Study Material:
+
+${cleanContext}
+`,
 },
 ],
 });
 
 
-let outputText =
-  chatCompletion.choices[0]?.message?.content ||
-  "{}";
+let output =
+  completion.choices[0]?.message?.content || "";
 
-console.log(
-  "========== RAW QUIZ RESPONSE =========="
-);
-console.log(outputText);
-console.log(
-  "======================================="
-);
+console.log("RAW QUIZ OUTPUT:");
+console.log(output);
 
-outputText = outputText
+output = output
   .replace(/```json/gi, "")
   .replace(/```/g, "")
   .trim();
 
+const jsonMatch =
+  output.match(/\{[\s\S]*\}/);
+
+if (!jsonMatch) {
+  return NextResponse.json({
+    quiz: [],
+    error: "No JSON found in model response",
+    raw: output,
+  });
+}
+
 try {
-  const parsedData = JSON.parse(outputText);
+  const parsed = JSON.parse(jsonMatch[0]);
 
-  return NextResponse.json(parsedData);
-} catch (parseError) {
-  console.error(
-    "QUIZ JSON PARSE FAILED"
-  );
-  console.error(outputText);
+  return NextResponse.json(parsed);
+} catch (err) {
+  console.error("JSON PARSE ERROR:", err);
 
-  const jsonMatch =
-    outputText.match(
-      /\{[\s\S]*\}/
-    );
-
-  if (jsonMatch) {
-    try {
-      const recovered =
-        JSON.parse(jsonMatch[0]);
-
-      return NextResponse.json(
-        recovered
-      );
-    } catch {}
-  }
-
-  return NextResponse.json(
-    {
-      quiz: [],
-      error:
-        "Invalid JSON returned by model",
-      raw: outputText,
-    },
-    { status: 200 }
-  );
+  return NextResponse.json({
+    quiz: [],
+    error: "JSON parse failed",
+    raw: output,
+  });
 }
 
 
@@ -126,15 +121,13 @@ console.error(
 );
 console.error(error);
 
-return NextResponse.json(
-  {
-    quiz: [],
-    error:
-      error?.message ||
-      "Unknown server error",
-  },
-  { status: 200 }
-);
+
+return NextResponse.json({
+  quiz: [],
+  error:
+    error?.message ||
+    "Unknown server error",
+});
 
 
 }

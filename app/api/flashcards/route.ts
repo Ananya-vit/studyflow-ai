@@ -23,8 +23,8 @@ const cleanContext = String(incomingText)
 
 const chatCompletion =
   await groq.chat.completions.create({
-    model: "llama3-8b-8192",
-    temperature: 0.1,
+    model: "llama-3.3-70b-versatile",
+    temperature: 0.5,
     messages: [
       {
         role: "system",
