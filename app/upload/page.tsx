@@ -42,12 +42,22 @@ export default function UploadPage() {
 
       setCurrentStep("Extracting knowledge assets...");
       const extractResponse = await fetch("/api/extract-pdf", {
-        method: "POST",
-        body: formData,
-      });
-      
-      if (!extractResponse.ok) throw new Error("Content extraction failed");
-      
+  method: "POST",
+  body: formData,
+});
+
+console.log("Extraction status:", extractResponse.status);
+console.log("Extraction ok:", extractResponse.ok);
+
+if (!extractResponse.ok) {
+  const errorText = await extractResponse.text();
+
+  console.error("Extraction API Error:", errorText);
+
+  throw new Error(
+    `Content extraction failed (${extractResponse.status}): ${errorText}`
+  );
+}
       const rawExtractData = await extractResponse.json();
       console.log("1. Raw Data from PDF Extract Endpoint:", rawExtractData);
 

@@ -1,35 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
-import pdf from "pdf-parse-new";
+const pdf = require("pdf-parse-fork");
+
+export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
-
-    const file = formData.get("file") as File;
+    const file = formData.get("file") as File | null;
 
     if (!file) {
       return NextResponse.json(
-        { error: "No file uploaded" },
+        { success: false, error: "No file uploaded" },
         { status: 400 }
       );
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-    const data = await pdf(buffer);
+    const result = await pdf(buffer);
 
     return NextResponse.json({
       success: true,
-      text: data.text,
+      text: result.text,
+      pages: result.numpages,
     });
   } catch (error: any) {
-    console.error("PDF ERROR:", error);
+    console.error("PDF Extraction Error:", error);
 
     return NextResponse.json(
       {
         success: false,
-        error: error?.message || String(error),
+        error: error.message,
       },
       { status: 500 }
     );
