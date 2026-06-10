@@ -63,7 +63,7 @@ export default function DashboardHero() {
 
           {/* Continue Action */}
           <motion.button
-            whileHover={{ scale: 1.01, bg: 'linear-gradient(to right, #4f46e5, #6d28d9)' }}
+            whileHover={{ scale: 1.01,  }}
             whileTap={{ scale: 0.99 }}
             className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl shadow-indigo-600/10 group"
           >
