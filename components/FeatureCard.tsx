@@ -7,7 +7,7 @@ import {
   Calendar, BarChart3, Upload, ArrowRight 
 } from 'lucide-react';
 import { FeatureItem } from '../types/dashboard';
-
+import { Variants } from "framer-motion";
 const tools: FeatureItem[] = [
   { id: '1', title: 'Upload Material', description: 'Convert text assets, lectures, and PDFs into customized knowledge structures.', icon: Upload, type: 'upload' },
   { id: '2', title: 'AI Notes', description: 'Auto-format study structures with conceptual hierarchies and semantic summaries.', icon: FileText, type: 'notes', badge: 'Refined' },
@@ -17,14 +17,32 @@ const tools: FeatureItem[] = [
   { id: '6', title: 'Study Planner', description: 'Dynamically schedule preparation calendars optimized around performance gaps.', icon: Calendar, type: 'planner' },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.05 } }
+const containerVariants: Variants = {
+  hidden: {
+    opacity: 0,
+  },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
 };
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 260, damping: 25 } }
+
+
+const cardVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+    },
+  },
 };
 
 export default function FeatureCard() {
