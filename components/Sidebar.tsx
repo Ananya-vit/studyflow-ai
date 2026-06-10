@@ -29,15 +29,14 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
       <div className="flex h-full flex-col justify-between p-6">
         <div>
           {/* Logo Brand Core */}
-          <div className="flex items-center gap-3 px-2 py-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md shadow-indigo-500/20">
-              <LogoIcon className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <span className="text-base font-bold tracking-tight text-white">StudyFlow</span>
-              <span className="ml-1 text-[10px] font-semibold text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded-full">AI</span>
-            </div>
-          </div>
+          <div className="px-2 py-3">
+  <span className="text-base font-bold tracking-tight text-white">
+    StudyFlow
+  </span>
+  <span className="ml-1 text-[10px] font-semibold text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded-full">
+    AI
+  </span>
+</div>
 
           {/* Navigation Links Layer */}
           <nav className="mt-8 space-y-1.5">
