@@ -1,23 +1,22 @@
 'use client';
 
 import React, { useState } from 'react';
-import AnimatedBackground from '@/components/AnimatedBackground';
+import WorkspaceBackground from "@/components/WorkspaceBackground";
 import Sidebar from '@/components/Sidebar'; // Using the updated premium sidebar
 import DashboardHero from '@/components/DashboardHero';
 import StudyStats from '@/components/StudyStats';
 import FeatureCard from '@/components/FeatureCard';
-import ActivityTimeline from '@/components/ActivityTimeline';
 import LearningAnalytics from '@/components/LearningAnalytics';
-import KnowledgeGraph from '@/components/KnowledgeGraph';
 import { Menu, Search, Bell, Sparkles } from 'lucide-react';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
 
   return (
-    <div className="min-h-screen text-slate-100 font-sans selection:bg-indigo-500/30 selection:text-white antialiased overflow-x-hidden">
+    
+    <div className="min-h-screen bg-black text-slate-100 font-sans selection:bg-indigo-500/30 selection:text-white antialiased overflow-x-hidden">
       {/* Premium Ambient Background Network Node Layer */}
-      <AnimatedBackground />
+      <WorkspaceBackground />
 
       {/* Structural Layout Wrapper */}
       <div className="flex">
@@ -28,7 +27,7 @@ export default function Dashboard() {
         <div className="flex-1 md:pl-64 min-h-screen flex flex-col transition-all duration-300">
           
           {/* Top Floating Glass Header Controller */}
-          <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.04] bg-[#070913]/40 px-4 backdrop-blur-md md:px-8">
+          <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.04] bg-black/80 px-4 backdrop-blur-md md:px-8">
             <div className="flex items-center gap-3 w-full max-w-md">
               <button className="rounded-lg p-1.5 text-slate-400 hover:bg-white/[0.02] hover:text-white md:hidden">
                 <Menu className="h-4 w-4" />
@@ -81,8 +80,8 @@ export default function Dashboard() {
 
               {/* Right Diagnostic Metric Pipeline Feeds */}
               <div className="lg:col-span-4 space-y-6">
-                <KnowledgeGraph />
-                <ActivityTimeline />
+               
+                
               </div>
 
             </div>

@@ -4,23 +4,27 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Award, Layers, Hourglass } from 'lucide-react';
 import { StatItem } from '../types/dashboard';
+import { Variants } from "framer-motion";
+
 
 const statsData: StatItem[] = [
   { label: 'Documents Processed', value: 14, change: '+3 this week', isPositive: true, color: 'text-indigo-400', icon: FileText },
   { label: 'Active Study Streak', value: 8, suffix: ' Days', change: 'Top 5% of Students', isPositive: true, color: 'text-amber-400', icon: Award },
-  { label: 'Flashcards Mastered', value: 142, change: '92% retention rate', isPositive: true, color: 'text-purple-400', icon: Layers },
-  { label: 'AI Synthesis Time', value: 18.5, suffix: 'h', change: 'Efficient tracking', isPositive: true, color: 'text-cyan-400', icon: Hourglass },
+  
 ] as any;
 
-const containerVariants = {
-  hidden: { opacity: 0 },
+const containerVariants: Variants = {
+  hidden: {
+    opacity: 0,
+  },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.08 }
-  }
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
 };
 
-import { Variants } from "framer-motion";
 
 const itemVariants: Variants = {
   hidden: {

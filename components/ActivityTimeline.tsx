@@ -14,12 +14,7 @@ const activityData: TimelineItem[] = [
 
 export default function ActivityTimeline() {
   return (
-    <div className="rounded-xl border border-white/[0.05] bg-[#0c1020]/40 p-5 backdrop-blur-sm space-y-4">
-      <div>
-        <h2 className="text-sm font-bold text-white tracking-tight">Active Learning Pipeline</h2>
-        <p className="text-[11px] text-slate-400">Real-time state logs of local AI ingestion nodes</p>
-      </div>
-
+    
       <div className="relative pl-4 space-y-5 before:absolute before:bottom-2 before:top-2 before:left-[7px] before:w-[1px] before:bg-white/[0.06]">
         {activityData.map((item, index) => {
           return (

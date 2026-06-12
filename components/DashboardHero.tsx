@@ -61,23 +61,7 @@ export default function DashboardHero() {
             <p className="text-[11px] text-slate-400 mt-0.5">Drop PDF, EPUB or Materials up to 45MB</p>
           </motion.div>
 
-          {/* Continue Action */}
-          <motion.button
-            whileHover={{ scale: 1.01,  }}
-            whileTap={{ scale: 0.99 }}
-            className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl shadow-indigo-600/10 group"
-          >
-            <div className="flex items-center gap-3 text-left">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white">
-                <Play className="h-3.5 w-3.5 fill-current" />
-              </div>
-              <div>
-                <p className="text-xs font-semibold">Resume Last Session</p>
-                <p className="text-[10px] text-indigo-200">Neural Sync: Cell Structure Quiz</p>
-              </div>
-            </div>
-          </motion.button>
-        </div>
+          </div>
       </div>
     </motion.div>
   );
